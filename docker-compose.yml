@@ -1,0 +1,19 @@
+services:
+  mqtt_broker:
+    image: eclipse-mosquitto
+    volumes:
+      - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
+  client_send:
+    build:
+      context: ./client_send/
+    environment:
+      BROKER_HOST: mqtt_broker
+    depends_on:
+      - client_receive
+  client_receive:
+    build:
+      context: ./client_receive/
+    environment:
+      BROKER_HOST: mqtt_broker
+    depends_on:
+      - mqtt_broker
